@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { useForm } from 'react-hook-form';
@@ -27,7 +27,6 @@ const Home = (props) => {
     };
 
     const response = await createUser(payload);
-    console.log('response', response);
     history.push(Paths.DetailUser, { response });
   };
 
