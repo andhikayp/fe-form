@@ -2,6 +2,8 @@ import React from 'react';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 
+import './FormGroup.css';
+
 const FormGroup = (props) => {
   const {
     controlId, label, name, register, errors, type, prefix, placeholder
@@ -32,7 +34,7 @@ const FormGroup = (props) => {
     <Form.Group controlId={controlId} className="mb-3">
       <Form.Label>{label}</Form.Label>
       {prefix ? renderFormWithPrefix() : renderFormControl()}
-      {errors[name] && <Form.Text className="text-danger">{errors[name].message}</Form.Text>}
+      {errors[name] && <Form.Text className="text-danger error-input">{errors[name].message}</Form.Text>}
     </Form.Group>
   );
 };

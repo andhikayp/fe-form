@@ -4,6 +4,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 import { NavbarHeader } from '../NavbarHeader';
+import './Layout.css';
 
 const Layout = (props) => {
   const {

@@ -9,6 +9,7 @@ import { FormGroup } from '../../component/FormGroup';
 import config from './Home.config';
 import { createUser } from '../../api';
 import Paths from '../../root/Paths';
+import './Home.css';
 
 const { formConfig, REGISTER } = config;
 
