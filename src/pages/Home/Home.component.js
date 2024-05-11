@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { useForm } from 'react-hook-form';
@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import { Layout } from '../../component/Layout';
 import { FormGroup } from '../../component/FormGroup';
+import { LoadingPage } from '../../component/LoadingPage';
 import config from './Home.config';
 import { createUser } from '../../api';
 import Paths from '../../root/Paths';
@@ -15,6 +16,7 @@ const { formConfig, REGISTER } = config;
 
 const Home = (props) => {
   const { history } = props;
+  const [loading, setLoading] = useState(false);
 
   const {
     register, handleSubmit, setError,
@@ -25,6 +27,7 @@ const Home = (props) => {
   });
 
   const onSubmit = async (formValue) => {
+    setLoading(true);
     const payload = {
       ...formValue,
       phoneNumber: `+62${formValue.phoneNumber.substr(1)}`
@@ -34,6 +37,7 @@ const Home = (props) => {
     if (response) {
       history.push(Paths.DetailUser, { response });
     }
+    setLoading(false);
   };
 
   const renderFormGroup = (params) => {
@@ -56,12 +60,15 @@ const Home = (props) => {
   };
 
   const renderContent = () => (
-    <Form onSubmit={handleSubmit(onSubmit)}>
-      {formConfig.map(renderFormGroup)}
-      <Button variant="primary" type="submit">
-        Submit
-      </Button>
-    </Form>
+    <>
+      {loading && <LoadingPage />}
+      <Form onSubmit={handleSubmit(onSubmit)}>
+        {formConfig.map(renderFormGroup)}
+        <Button variant="primary" type="submit">
+          Submit
+        </Button>
+      </Form>
+    </>
   );
 
   return (

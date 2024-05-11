@@ -29,6 +29,7 @@ module.exports = {
     'no-unused-vars': 'off',
     'no-unsafe-optional-chaining': 'off',
     'eslint-disable eqeqeq': 'off',
-    'import/no-extraneous-dependencies': 'off'
+    'import/no-extraneous-dependencies': 'off',
+    'consistent-return': 'off'
   },
 };
