@@ -16,7 +16,10 @@ const { formConfig, REGISTER } = config;
 const Home = (props) => {
   const { history } = props;
 
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const {
+    register, handleSubmit, setError,
+    formState: { errors }
+  } = useForm({
     resolver: zodResolver(REGISTER),
     mode: 'onChange'
   });
@@ -27,8 +30,10 @@ const Home = (props) => {
       phoneNumber: `+62${formValue.phoneNumber.substr(1)}`
     };
 
-    const response = await createUser(payload);
-    history.push(Paths.DetailUser, { response });
+    const response = await createUser(payload, setError);
+    if (response) {
+      history.push(Paths.DetailUser, { response });
+    }
   };
 
   const renderFormGroup = (params) => {
