@@ -30,7 +30,7 @@ const Home = (props) => {
     setLoading(true);
     const payload = {
       ...formValue,
-      phoneNumber: `+62${formValue.phoneNumber.substr(1)}`
+      phoneNumber: `+62${formValue.phoneNumber.substr()}`
     };
 
     const response = await createUser(payload, setError);
