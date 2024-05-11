@@ -57,11 +57,11 @@ const DetailUser = (props) => {
       key: 'Phone Number',
       value: phoneNumber
     }, {
-      key: 'Hash Password',
+      key: 'Password',
       value: password,
       type: 'password'
     }, {
-      key: 'Hash Confirm Password',
+      key: 'Confirm Password',
       value: confirmPassword,
       type: 'password'
     }];
