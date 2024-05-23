@@ -7,6 +7,8 @@ import reportWebVitals from './reportWebVitals';
 import { RootNavigation } from './root';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+import './index.css';
+
 const queryClient = new QueryClient();
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

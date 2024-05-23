@@ -18,10 +18,10 @@ const Layout = (props) => {
   return (
     <div>
       <NavbarHeader />
-      <div className="mt-5 mb-5">
+      <div className="pt-5 pb-5 bg-black">
         <Container>
           <Row className="justify-content-md-center">
-            <Col xs={12} md={8}>
+            <Col xs={12} md={8} className="bg-white p-5 border border-info rounded">
               <h2 className="mb-5">
                 {!isLoading && title}
                 {subtitle && renderSubtitle()}

@@ -1,5 +1,5 @@
 const URL = {
-  service: 'https://be-form.onrender.com',
+  service: 'http://localhost:3001',
 };
 
 export default {
