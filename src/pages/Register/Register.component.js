@@ -34,10 +34,7 @@ const Register = (props) => {
   };
 
   const onSubmit = async (formValue) => {
-    // setLoading(true);
-    await registerUser(formValue, setError);
-    // setLoading(false);
-    // history.push(Paths.Login);
+    await registerUser(formValue, setError, setLoading, history);
   };
 
   const renderFormGroup = (params) => {

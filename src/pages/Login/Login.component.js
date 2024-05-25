@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import Alert from 'react-bootstrap/Alert';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -9,14 +10,16 @@ import { LoginLayout } from '../../component/LoginLayout';
 import config from './Login.config';
 import { LoadingPage } from '../../component/LoadingPage';
 import Paths from '../../root/Paths';
+import { loginUser } from '../../api';
 
 const { formConfig, LOGIN } = config;
 
 const Login = (props) => {
   const { history } = props;
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const {
-    register, handleSubmit, setError,
+    register, handleSubmit,
     formState: { errors }
   } = useForm({
     resolver: zodResolver(LOGIN),
@@ -24,11 +27,7 @@ const Login = (props) => {
   });
 
   const onSubmit = async (formValue) => {
-    setLoading(true);
-
-    // const response = await createUser(payload, setError);
-    setLoading(false);
-    history.push(Paths.DetailUser, { response });
+    await loginUser(formValue, setErrorMessage, setLoading, history);
   };
 
   const renderFormGroup = (params) => {
@@ -51,9 +50,16 @@ const Login = (props) => {
     );
   };
 
+  const renderAlert = () => (
+    <Alert key="danger" variant="danger">
+      {errorMessage}
+    </Alert>
+  );
+
   const renderContent = () => (
     <>
       {loading && <LoadingPage />}
+      {errorMessage && renderAlert()}
       <Form onSubmit={handleSubmit(onSubmit)}>
         {formConfig.map(renderFormGroup)}
         <div className="d-grid mt-5">

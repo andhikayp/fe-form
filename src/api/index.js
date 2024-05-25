@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import constants from '../utils/constants';
+import Paths from '../root/Paths';
 
 const { URL } = constants;
 
@@ -26,12 +27,13 @@ const saveSessionLogin = (response) => {
   sessionStorage.setItem('loginTime', JSON.stringify(formattedLoginTime));
 };
 
-export const registerUser = async (body, setError) => {
+export const registerUser = async (body, setError, setLoading, history) => {
   try {
+    setLoading(true);
     const response = await axios.post(`${URL.service}/api/register`, body);
     saveSessionLogin(response);
 
-    return response;
+    history.push(Paths.Home);
   } catch (error) {
     const { errors } = error?.response?.data;
     const parseErrors = JSON.parse(errors);
@@ -41,5 +43,22 @@ export const registerUser = async (body, setError) => {
         message: errorItem.message,
       });
     });
+  } finally {
+    setLoading(false);
+  }
+};
+
+export const loginUser = async (body, setError, setLoading, history) => {
+  try {
+    setLoading(true);
+    const response = await axios.post(`${URL.service}/api/login`, body);
+    saveSessionLogin(response);
+
+    history.push(Paths.Home);
+  } catch (error) {
+    const { errors } = error?.response?.data;
+    setError(errors);
+  } finally {
+    setLoading(false);
   }
 };
