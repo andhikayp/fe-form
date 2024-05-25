@@ -10,8 +10,8 @@ const LayoutLogin = (props) => {
 
   return (
     <div
-      className="d-flex justify-content-center align-items-center"
-      style={{ minHeight: '100vh', backgroundColor: 'black' }}
+      className="d-flex justify-content-center align-items-center, bg-dark"
+      style={{ minHeight: '100vh' }}
     >
       <Container style={{ padding: '10% 0px' }}>
         <Row className="justify-content-md-center">

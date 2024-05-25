@@ -63,7 +63,6 @@ const formConfig = [{
   name: 'email',
   type: 'text',
   placeholder: 'Email'
-
 }, {
   controlId: 'password',
   label: 'Password',

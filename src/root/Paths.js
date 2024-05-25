@@ -1,8 +1,9 @@
 const Paths = {
   Home: '/',
+  Transfer: '/transfer',
+  Transaction: '/transaction',
   Login: '/login',
   Register: '/register',
-  DetailUser: '/user',
 };
 
 export default Paths;
