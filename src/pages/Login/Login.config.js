@@ -27,10 +27,6 @@ const LOGIN = z
         message: 'Corporate Account Number must be at least 8 characters long',
       })
       .max(12, { message: 'Corporate Account Number must be at most 12 characters long' })
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: 'Password must match',
-    path: ['confirmPassword'],
   });
 
 const formConfig = [{

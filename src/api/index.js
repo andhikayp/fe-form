@@ -1,27 +1,42 @@
+import axios from 'axios';
+
 import constants from '../utils/constants';
 
 const { URL } = constants;
 
-const formatPhoneNumber = (phoneNumber) => {
-  if (phoneNumber.startsWith('+62')) {
-    return `0${phoneNumber.substr(3)}`;
-  }
-  return phoneNumber;
+const formatLoginTime = (time) => new Date(time).toLocaleString('en-US', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+  hour: 'numeric',
+  minute: 'numeric',
+  second: 'numeric',
+  hour12: false,
+});
+
+const saveSessionLogin = (response) => {
+  const { data } = response.data;
+  const {
+    token, user, corporat, loginTime
+  } = data;
+  const formattedLoginTime = formatLoginTime(loginTime);
+  sessionStorage.setItem('access_token', token);
+  sessionStorage.setItem('user', JSON.stringify(user));
+  sessionStorage.setItem('corporat', JSON.stringify(corporat));
+  sessionStorage.setItem('loginTime', JSON.stringify(formattedLoginTime));
 };
 
-export const createUser = async (body, setError) => {
+export const registerUser = async (body, setError) => {
   try {
-    const response = {
-      data: {
-        ...body,
-        phoneNumber: formatPhoneNumber(body.phoneNumber)
-      }
-    };
+    const response = await axios.post(`${URL.service}/api/register`, body);
+    saveSessionLogin(response);
 
     return response;
   } catch (error) {
-    const { errors } = error.response.data;
-    errors.forEach((errorItem) => {
+    const { errors } = error?.response?.data;
+    const parseErrors = JSON.parse(errors);
+
+    parseErrors.forEach((errorItem) => {
       setError(errorItem.path[0], {
         message: errorItem.message,
       });

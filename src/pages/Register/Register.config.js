@@ -22,10 +22,22 @@ const REGISTER = z
       .string()
       .min(8, { message: 'Username must be at least 8 characters long' })
       .max(100, { message: 'Username must be at most 100 characters long' }),
+    email: z
+      .string()
+      .min(1, { message: 'Email is required' })
+      .max(100, { message: 'Email must be at most 100 characters long' }),
     password: z
       .string()
       .min(8, { message: 'Password must be at least 8 characters long' })
       .max(100, { message: 'Password must be at most 100 characters long' }),
+    confirmPassword: z
+      .string()
+      .min(8, {
+        message: 'Confirm password must be at least 8 characters long',
+      })
+      .max(100, {
+        message: 'Confirm password must be at most 100 characters long',
+      }),
     role: z
       .string()
       .min(1, { message: 'Role is required' }),
@@ -105,6 +117,13 @@ const formConfig = (renderSubmitOtp) => [{
     <span>+62</span>
     <IoIosArrowDown />
   </div>
+}, {
+  controlId: 'email',
+  label: 'Email',
+  name: 'email',
+  type: 'text',
+  placeholder: 'Email',
+  isPassword: false,
 }, {
   controlId: 'verificationCode',
   label: 'Verification Code',

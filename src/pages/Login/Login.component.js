@@ -15,8 +15,6 @@ const { formConfig, LOGIN } = config;
 const Login = (props) => {
   const { history } = props;
   const [loading, setLoading] = useState(false);
-  console.log(formConfig, 'formConfig');
-
   const {
     register, handleSubmit, setError,
     formState: { errors }
@@ -53,34 +51,30 @@ const Login = (props) => {
     );
   };
 
-  const renderContent = () => {
-    console.log();
-
-    return (
-      <>
-        {loading && <LoadingPage />}
-        <Form onSubmit={handleSubmit(onSubmit)}>
-          {formConfig.map(renderFormGroup)}
-          <div className="d-grid mt-5">
-            <Button variant="warning" type="submit">
-              Login
-            </Button>
-          </div>
-        </Form>
-        <div className="text-center mt-5">
-          Without Account?
-          {' '}
-          <span
-            className="text-info"
-            style={{ color: 'blue', cursor: 'pointer' }}
-            onClick={() => history.push(Paths.Register)}
-          >
-            Register Now
-          </span>
+  const renderContent = () => (
+    <>
+      {loading && <LoadingPage />}
+      <Form onSubmit={handleSubmit(onSubmit)}>
+        {formConfig.map(renderFormGroup)}
+        <div className="d-grid mt-5">
+          <Button variant="warning" type="submit">
+            Login
+          </Button>
         </div>
-      </>
-    );
-  };
+      </Form>
+      <div className="text-center mt-5">
+        Without Account?
+        {' '}
+        <span
+          className="text-info"
+          style={{ color: 'blue', cursor: 'pointer' }}
+          onClick={() => history.push(Paths.Register)}
+        >
+          Register Now
+        </span>
+      </div>
+    </>
+  );
 
   return (
     <LoginLayout

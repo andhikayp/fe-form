@@ -1,0 +1,55 @@
+{
+  "data": {
+      "data": {
+          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJJZCI6InRlc3QxMjMxOSIsInJvbGUiOiJBcHByb3ZlciIsInVzZXJuYW1lIjoiYmVzLmRldjA2IiwiZW1haWwiOiJhbmRoaWtheTI0QGdtYWlsLmNvbSIsInBob25lTnVtYmVyIjoiODEyNTIwNDMxODUifSwiY29ycG9yYXRlIjp7ImNvcnBvcmF0ZUFjY291bnROdW1iZXIiOiIyNzA5MTk5OTI3IiwiY29ycG9yYXRlTmFtZSI6IkFtYXpvbiBBcmFiIn0sImlhdCI6MTcxNjYxNTAwOSwiZXhwIjoxNzE2NzAxNDA5fQ.LPbEjjM1I9bN8ZdWAHYvPU_r5f-b6xlZKrL2iui2C8M",
+          "user": {
+              "userId": "test12319",
+              "role": "Approver",
+              "username": "bes.dev06",
+              "email": "andhikay24@gmail.com",
+              "phoneNumber": "81252043185"
+          },
+          "corporat": {
+              "corporateAccountNumber": "2709199927",
+              "corporateName": "Amazon Arab"
+          }
+      }
+  },
+  "status": 200,
+  "statusText": "OK",
+  "headers": {
+      "content-length": "643",
+      "content-type": "application/json; charset=utf-8"
+  },
+  "config": {
+      "transitional": {
+          "silentJSONParsing": true,
+          "forcedJSONParsing": true,
+          "clarifyTimeoutError": false
+      },
+      "adapter": [
+          "xhr",
+          "http"
+      ],
+      "transformRequest": [
+          null
+      ],
+      "transformResponse": [
+          null
+      ],
+      "timeout": 0,
+      "xsrfCookieName": "XSRF-TOKEN",
+      "xsrfHeaderName": "X-XSRF-TOKEN",
+      "maxContentLength": -1,
+      "maxBodyLength": -1,
+      "env": {},
+      "headers": {
+          "Accept": "application/json, text/plain, */*",
+          "Content-Type": "application/json"
+      },
+      "method": "post",
+      "url": "http://localhost:3001/api/register",
+      "data": "{\"userId\":\"test12319\",\"username\":\"bes.dev06\",\"email\":\"andhikay24@gmail.com\",\"password\":\"P@ssw0rd\",\"confirmPassword\":\"P@ssw0rd\",\"role\":\"Approver\",\"corporateName\":\"Amazon Inggris\",\"verificationCode\":\"177132\",\"phoneNumber\":\"81252043185\",\"corporateAccountNumber\":\"2709199927\"}"
+  },
+  "request": {}
+}

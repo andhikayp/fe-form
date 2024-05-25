@@ -8,7 +8,7 @@ import { Layout } from '../../component/Layout';
 import { FormGroup } from '../../component/FormGroup';
 import { LoadingPage } from '../../component/LoadingPage';
 import config from './Home.config';
-import { createUser } from '../../api';
+import { registerUser } from '../../api';
 import Paths from '../../root/Paths';
 import './Home.css';
 
@@ -33,7 +33,7 @@ const Home = (props) => {
       phoneNumber: `+62${formValue.phoneNumber.substr()}`
     };
 
-    const response = await createUser(payload, setError);
+    const response = await registerUser(payload, setError);
     if (response) {
       history.push(Paths.DetailUser, { response });
     }
