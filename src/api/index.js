@@ -38,6 +38,26 @@ const removeSessionLogin = () => {
   sessionStorage.removeItem('loginTime');
 };
 
+export const sendOtp = async (email, setError, setLoading) => {
+  try {
+    setLoading(true);
+    const response = await axios.get(`${URL.service}/api/otp/${email}`);
+    saveSessionLogin(response);
+  } catch (error) {
+    if (!email) {
+      setError('email', {
+        message: 'Email is required'
+      });
+      return;
+    }
+    setError('verificationCode', {
+      message: 'Failed send verification code'
+    });
+  } finally {
+    setLoading(false);
+  }
+};
+
 export const registerUser = async (body, setError, setLoading, history) => {
   try {
     setLoading(true);
@@ -90,15 +110,16 @@ export const logoutUser = async (setLoading, history) => {
 };
 
 export const getTransactionOverview = async () => {
-  const accessToken = sessionStorage.getItem('access_token');
-  const headers = {
-    'X-API-TOKEN': accessToken,
-  };
-  const response = await axios.get(`${URL.service}/api/transactions-overview`, { headers });
-  const { data } = response.data;
-  // const {
-  //   REJECTED, APPROVED, WAITING
-  // } = data;
+  try {
+    const accessToken = sessionStorage.getItem('access_token');
+    const headers = {
+      'X-API-TOKEN': accessToken,
+    };
+    const response = await axios.get(`${URL.service}/api/transactions-overview`, { headers });
+    const { data } = response.data;
 
-  return data;
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
 };

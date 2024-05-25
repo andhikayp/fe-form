@@ -20,7 +20,6 @@ const NavbarHeader = (props) => {
   if (!accessToken) {
     history.replace(Paths.Login);
   }
-  const { username } = user;
 
   const handleLogout = async () => {
     await logoutUser(setLoading, history);
@@ -39,7 +38,7 @@ const NavbarHeader = (props) => {
             {' '}
             <CgProfile />
             {' '}
-            {username}
+            {user?.username}
           </Nav.Link>
           <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
         </Nav>

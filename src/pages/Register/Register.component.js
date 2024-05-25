@@ -9,7 +9,7 @@ import { LoginLayout } from '../../component/LoginLayout';
 import config from './Register.config';
 import { LoadingPage } from '../../component/LoadingPage';
 import Paths from '../../root/Paths';
-import { registerUser } from '../../api';
+import { registerUser, sendOtp } from '../../api';
 
 const { formConfig, REGISTER } = config;
 
@@ -18,7 +18,7 @@ const Register = (props) => {
   const [loading, setLoading] = useState(false);
 
   const {
-    register, handleSubmit, setError,
+    register, handleSubmit, setError, getValues,
     formState: { errors }
   } = useForm({
     resolver: zodResolver(REGISTER),
@@ -26,10 +26,13 @@ const Register = (props) => {
   });
 
   const renderSubmitOtp = () => {
-    const handleSubmitOtp = () => {};
+    const handleSubmitOtp = async () => {
+      const email = getValues('email');
+      await sendOtp(email, setError, setLoading);
+    };
 
     return (
-      <div onClick={handleSubmitOtp} className="cursor-pointer">Send OTP Code</div>
+      <div onClick={handleSubmitOtp} style={{ cursor: 'pointer' }}>Send OTP Code</div>
     );
   };
 
