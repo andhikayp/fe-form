@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import {
-  Navbar, Nav, Container, Row, Col, Offcanvas
+  Container, Row, Col, Offcanvas
 } from 'react-bootstrap';
-import Dropdown from 'react-bootstrap/Dropdown';
-import { GoSidebarCollapse } from 'react-icons/go';
 
 import './Layout.css';
 import { Sidebar } from '../Sidebar';
@@ -45,13 +43,13 @@ const Layout = (props) => {
         <Col lg={9} className="d-flex flex-column px-3 bg-light">
           {renderNavbarHeader()}
 
-          <div className="flex-grow-1 p-3">
+          <div className="flex-grow-1 mt-5">
             <div className="content">
               {content()}
             </div>
           </div>
 
-          <footer className="bg-white text-center p-3 my-3 mt-auto">
+          <footer className="bg-white text-center p-3 my-3 mt-auto rounded">
             PT Bank Neo Commerce Tbk is licensed and supervised by the Indonesia Financial Service
             {' '}
             Authority (OJK) and insured member of Deposit Insurance Corporation (LPS).

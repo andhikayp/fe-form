@@ -5,15 +5,19 @@ import Paths from '../root/Paths';
 
 const { URL } = constants;
 
-const formatLoginTime = (time) => new Date(time).toLocaleString('en-US', {
-  day: 'numeric',
-  month: 'short',
-  year: 'numeric',
-  hour: 'numeric',
-  minute: 'numeric',
-  second: 'numeric',
-  hour12: false,
-});
+const formatLoginTime = (date) => {
+  const options = {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+  };
+
+  return date.toLocaleString('en-GB', options).replace(',', '');
+};
 
 const saveSessionLogin = (response) => {
   const { data } = response.data;
@@ -83,4 +87,18 @@ export const logoutUser = async (setLoading, history) => {
   } finally {
     setLoading(false);
   }
+};
+
+export const getTransactionOverview = async () => {
+  const accessToken = sessionStorage.getItem('access_token');
+  const headers = {
+    'X-API-TOKEN': accessToken,
+  };
+  const response = await axios.get(`${URL.service}/api/transactions-overview`, { headers });
+  const { data } = response.data;
+  // const {
+  //   REJECTED, APPROVED, WAITING
+  // } = data;
+
+  return data;
 };

@@ -1,74 +1,42 @@
-import React, { useState } from 'react';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import React, { useState, useEffect } from 'react';
 
 import { Layout } from '../../component/Layout';
-import { FormGroup } from '../../component/FormGroup';
 import { LoadingPage } from '../../component/LoadingPage';
-import config from './Home.config';
-import { registerUser } from '../../api';
-import Paths from '../../root/Paths';
+import { getTransactionOverview } from '../../api';
 import './Home.css';
+import TransactionOverview from './TransactionOverview.js/TransactionOverview.component';
 
-const { formConfig, REGISTER } = config;
-
-const Home = (props) => {
-  const { history } = props;
+const Home = () => {
   const [loading, setLoading] = useState(false);
+  const loginTime = JSON.parse(sessionStorage.getItem('loginTime'));
+  const [overview, setOverview] = useState();
 
-  const {
-    register, handleSubmit, setError,
-    formState: { errors }
-  } = useForm({
-    resolver: zodResolver(REGISTER),
-    mode: 'onChange'
-  });
-
-  const onSubmit = async (formValue) => {
-    setLoading(true);
-    const payload = {
-      ...formValue,
-      phoneNumber: `+62${formValue.phoneNumber.substr()}`
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getTransactionOverview();
+      setOverview(data);
     };
 
-    const response = await registerUser(payload, setError);
-    if (response) {
-      history.push(Paths.DetailUser, { response });
-    }
-    setLoading(false);
-  };
+    fetchData();
+  }, []);
 
-  const renderFormGroup = (params) => {
-    const {
-      controlId, label, name, type, prefix, placeholder
-    } = params;
+  const renderLoginTime = () => (
+    <div className="bg-white p-3 my-3 mt-auto rounded">
+      {`Last Login Time: ${loginTime}`}
+    </div>
+  );
 
-    return (
-      <FormGroup
-        controlId={controlId}
-        label={label}
-        name={name}
-        register={register}
-        errors={errors}
-        type={type}
-        prefix={prefix}
-        placeholder={placeholder}
-      />
-    );
-  };
+  const renderTransactionOverview = () => (
+    <div className="bg-white p-3 my-3 mt-auto rounded">
+      <TransactionOverview transactionOverview={overview} />
+    </div>
+  );
 
   const renderContent = () => (
     <>
+      {renderLoginTime()}
+      {renderTransactionOverview()}
       {loading && <LoadingPage />}
-      halo
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        {formConfig.map(renderFormGroup)}
-        <Button variant="primary" type="submit">
-          Submit
-        </Button>
-      </Form>
     </>
   );
 
