@@ -27,6 +27,13 @@ const saveSessionLogin = (response) => {
   sessionStorage.setItem('loginTime', JSON.stringify(formattedLoginTime));
 };
 
+const removeSessionLogin = () => {
+  sessionStorage.removeItem('access_token');
+  sessionStorage.removeItem('user');
+  sessionStorage.removeItem('corporat');
+  sessionStorage.removeItem('loginTime');
+};
+
 export const registerUser = async (body, setError, setLoading, history) => {
   try {
     setLoading(true);
@@ -58,6 +65,21 @@ export const loginUser = async (body, setError, setLoading, history) => {
   } catch (error) {
     const { errors } = error?.response?.data;
     setError(errors);
+  } finally {
+    setLoading(false);
+  }
+};
+
+export const logoutUser = async (setLoading, history) => {
+  try {
+    setLoading(true);
+    const accessToken = sessionStorage.getItem('access_token');
+    const headers = {
+      'X-API-TOKEN': accessToken,
+    };
+    await axios.post(`${URL.service}/api/logout`, null, { headers });
+    removeSessionLogin();
+    history.replace(Paths.Login);
   } finally {
     setLoading(false);
   }

@@ -62,6 +62,7 @@ const Home = (props) => {
   const renderContent = () => (
     <>
       {loading && <LoadingPage />}
+      halo
       <Form onSubmit={handleSubmit(onSubmit)}>
         {formConfig.map(renderFormGroup)}
         <Button variant="primary" type="submit">
@@ -73,9 +74,7 @@ const Home = (props) => {
 
   return (
     <Layout
-      title="Register"
       content={renderContent}
-      isLoading={false}
     />
   );
 };

@@ -7,6 +7,7 @@ import { GoSidebarCollapse } from 'react-icons/go';
 
 import './Layout.css';
 import { Sidebar } from '../Sidebar';
+import { NavbarHeader } from '../NavbarHeader';
 
 const Layout = (props) => {
   const { content } = props;
@@ -20,6 +21,11 @@ const Layout = (props) => {
     <Sidebar />
   );
 
+  const renderNavbarHeader = () => (
+    <NavbarHeader
+      toggleSidebar={toggleSidebar}
+    />
+  );
   return (
     <Container fluid className="d-flex flex-column min-vh-100">
       <Row className="flex-grow-1">
@@ -37,35 +43,11 @@ const Layout = (props) => {
         </Col>
 
         <Col lg={9} className="d-flex flex-column px-3 bg-light">
-          <Navbar bg="light" expand="lg">
-            <div onClick={toggleSidebar} className="d-lg-none me-2 cursor-pointer">
-              <GoSidebarCollapse style={{ width: '32px', height: '50px' }} />
-            </div>
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
-            <Navbar.Collapse id="basic-navbar-nav">
-              <Nav className="ms-auto align-items-end">
-                <Nav.Link href="#logout">Logout</Nav.Link>
-                <Nav.Link href="#logout">Username</Nav.Link>
-              </Nav>
-              <Nav.Item
-                className="d-flex justify-content-end align-items-center"
-              >
-                <Dropdown>
-                  <Dropdown.Toggle variant="outline-secondary" id="dropdown-basic" className="btn-sm">
-                    Language
-                  </Dropdown.Toggle>
-                  <Dropdown.Menu>
-                    <Dropdown.Item href="#/action-1">English</Dropdown.Item>
-                    <Dropdown.Item href="#/action-2">Bahasa</Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
-              </Nav.Item>
-            </Navbar.Collapse>
-          </Navbar>
+          {renderNavbarHeader()}
 
           <div className="flex-grow-1 p-3">
             <div className="content">
-              {content}
+              {content()}
             </div>
           </div>
 
