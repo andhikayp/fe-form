@@ -5,7 +5,7 @@ import Col from 'react-bootstrap/Col';
 
 const LayoutLogin = (props) => {
   const {
-    title, content, isLoading, subtitle
+    content, isLoading
   } = props;
 
   return (

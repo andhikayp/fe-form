@@ -13,3 +13,7 @@
 .form-control:focus {
   animation: inputFocus 0.5s ease;
 }
+
+.react-datepicker-wrapper {
+  width: 100% !important;
+}

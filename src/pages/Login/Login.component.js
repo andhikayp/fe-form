@@ -7,10 +7,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import { FormGroup } from '../../component/FormGroup';
 import { LoginLayout } from '../../component/LoginLayout';
-import config from './Login.config';
 import { LoadingPage } from '../../component/LoadingPage';
 import Paths from '../../root/Paths';
 import { loginUser } from '../../api';
+import config from './Login.config';
 
 const { formConfig, LOGIN } = config;
 

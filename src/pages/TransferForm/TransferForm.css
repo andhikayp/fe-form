@@ -1,0 +1,53 @@
+.no-outline {
+  margin: 0px !important;
+  padding: 0px !important;
+}
+
+/* UploadFileForm.css */
+/* .custom-upload .form-control {
+  border: 2px dashed #ccc;
+  text-align: center;
+  padding: 20px;
+}
+
+.custom-upload .form-control::before {
+  content: 'Upload your file here';
+  display: block;
+  margin-bottom: 10px;
+  font-size: 1.2em;
+}
+
+.custom-upload .form-control::after {
+  content: '📁';
+  display: block;
+  font-size: 2em;
+} */
+
+/* UploadFileForm.css */
+.custom-upload .file-input {
+  display: none;
+}
+
+.custom-upload .file-label {
+  border: 2px dashed #ccc;
+  text-align: center;
+  padding: 20px;
+  display: inline-block;
+  cursor: pointer;
+  width: 100%;
+  position: relative;
+}
+
+.custom-upload .file-label:hover {
+  background-color: #f8f9fa;
+}
+
+.custom-upload .file-label .upload-text {
+  margin-top: 10px;
+  font-size: 1.2em;
+}
+
+.custom-upload .file-label .upload-icon {
+  font-size: 2em;
+}
+

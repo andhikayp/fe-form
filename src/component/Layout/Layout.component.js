@@ -40,7 +40,11 @@ const Layout = (props) => {
           {renderSidebar()}
         </Col>
 
-        <Col lg={9} className="d-flex flex-column px-3 bg-light">
+        <Col
+          lg={9}
+          className="d-flex flex-column px-3"
+          style={{ backgroundColor: '#F5F5F5' }}
+        >
           {renderNavbarHeader()}
 
           <div className="flex-grow-1 mt-5">
