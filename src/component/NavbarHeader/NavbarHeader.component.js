@@ -28,11 +28,11 @@ const NavbarHeader = (props) => {
   return (
     <Navbar bg="light" expand="lg">
       {loading && <LoadingPage />}
-      <div onClick={toggleSidebar} className="d-lg-none me-2 cursor-pointer">
+      <div onClick={toggleSidebar} className="d-lg-none me-2" style={{ cursor: 'pointer' }}>
         <GoSidebarCollapse style={{ width: '32px', height: '50px' }} />
       </div>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
-      <Navbar.Collapse id="basic-navbar-nav" style={{ gap: '25px' }}>
+      <Navbar.Collapse id="basic-navbar-nav" style={{ gap: '14px' }}>
         <Nav className="ms-auto align-items-end">
           <Nav.Link>
             {' '}

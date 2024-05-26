@@ -11,10 +11,11 @@ import { TableLayout } from '../../component/TableLayout';
 
 import { auditTransaction, getTransactionOverview, getTransactions } from '../../api';
 import './Home.css';
-import TransactionOverview from './TransactionOverview.js/TransactionOverview.component';
+import TransactionOverview from './TransactionOverview/TransactionOverview.component';
 import DetailTransaction from './DetailTransaction/DetailTransaction.component';
 import constants from '../../utils/constants';
 import config from './Home.config';
+import { formatDate, formatDatetime } from '../../utils/dateUtils';
 
 const { ROLE } = constants;
 const { tableHeadConfig } = config;
@@ -29,8 +30,9 @@ const Home = () => {
   const [transactionItem, setTransactionItem] = useState({});
   const [action, setAction] = useState();
   const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(2);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
   const [message, setMessage] = useState({});
 
   const user = JSON.parse(sessionStorage.getItem('user'));
@@ -52,6 +54,7 @@ const Home = () => {
       const transaction = await getTransactions(currentPage, itemsPerPage);
       setData(transaction.data);
       setTotalPages(transaction.totalPages);
+      setTotalItems(transaction.count);
     };
 
     fetchData();
@@ -63,7 +66,7 @@ const Home = () => {
 
   const renderLoginTime = () => (
     <div className="bg-white p-3 my-3 mt-auto rounded">
-      {`Last Login Time: ${loginTime}`}
+      {`Last Login Time: ${formatDatetime(loginTime)}`}
     </div>
   );
 
@@ -79,6 +82,7 @@ const Home = () => {
       return;
     }
     const transaction = await getTransactions(currentPage, itemsPerPage);
+    setTotalItems(transaction.count);
     setData(transaction.data);
     setTotalPages(transaction.totalPages);
     setIsShowModal(false);
@@ -177,18 +181,18 @@ const Home = () => {
   const renderTableBody = (item) => (
     <tr key={item.referenceNumber}>
       <td className="text-secondary">{item.referenceNumber}</td>
-      <td className="text-secondary">{item.totalAmount}</td>
+      <td className="tex  t-secondary">{item.totalAmount}</td>
       <td className="text-secondary">{item.totalTransfer}</td>
       <td className="text-secondary">{item.sourceAccount}</td>
       <td className="text-secondary">{item.makerUser.username}</td>
-      <td className="text-secondary">{item.transferDate}</td>
+      <td className="text-secondary">{item.transferDate ? formatDate(item.transferDate) : '-'}</td>
       <td
         className="text-secondary align-items-center justify-content-center"
         style={{
           position: 'sticky', right: 0, background: 'white'
         }}
       >
-        <div className="d-flex column-gap-3 text-warning">
+        <div className="d-flex column-gap-3 text-orange">
           {buttonConfig(item).map(renderButtonAction)}
         </div>
       </td>
@@ -202,6 +206,8 @@ const Home = () => {
       totalPages={totalPages}
       currentPage={currentPage}
       handlePageChange={handlePageChange}
+      totalItems={totalItems}
+      setItemsPerPage={setItemsPerPage}
     />
   );
 

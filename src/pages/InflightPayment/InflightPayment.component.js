@@ -64,11 +64,11 @@ const ConfirmTransfer = (props) => {
   );
 
   const handleTransfer = () => {
-    history.push(Paths.Transfer);
+    history.replace(Paths.Transfer);
   };
 
   const handleToHome = () => {
-    history.push(Paths.Home);
+    history.replace(Paths.Home);
   };
 
   const renderInformation = () => (

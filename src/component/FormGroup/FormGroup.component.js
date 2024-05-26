@@ -111,6 +111,7 @@ const FormGroup = (props) => {
         ref={ref}
         onBlur={onBlur}
         name={name}
+        defaultChecked
       />
       <Form.Check
         type="radio"

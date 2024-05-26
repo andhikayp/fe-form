@@ -174,7 +174,7 @@ export const transfer = async (body, setError, setLoading, history) => {
     const response = await axios.post(`${URL.service}/api/transactions`, body, { headers });
     const { data } = response.data;
 
-    history.push(Paths.InflightPayment, {
+    history.replace(Paths.InflightPayment, {
       payload: {
         ...body,
         ...data

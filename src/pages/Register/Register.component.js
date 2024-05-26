@@ -77,7 +77,7 @@ const Register = (props) => {
         Already have an account?
         {' '}
         <span
-          className="text-warning"
+          className="text-orange"
           style={{ cursor: 'pointer' }}
           onClick={() => history.push(Paths.Login)}
         >

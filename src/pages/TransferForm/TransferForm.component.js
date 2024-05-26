@@ -17,6 +17,7 @@ import './TransferForm.css';
 import config from './TransferForm.config';
 import { FormGroup } from '../../component/FormGroup';
 import Paths from '../../root/Paths';
+import { formatAmount } from '../../utils/amountUtils';
 
 const { formConfig } = config;
 
@@ -44,13 +45,13 @@ const TransferForm = (props) => {
 
         if (missingKeys.length > 0) {
           setMessageInfo({
-            variant: 'warning',
+            variant: 'danger',
             message: `Row ${index + 1} is missing keys: ${missingKeys.join(', ')}. Please reupload your template`
           });
         }
         if (extraKeys.length > 0) {
           setMessageInfo({
-            variant: 'warning',
+            variant: 'danger',
             message: `Row ${index + 1} has extra keys: ${extraKeys.join(', ')}. Please reupload your template`
           });
         }
@@ -65,15 +66,15 @@ const TransferForm = (props) => {
       });
       if (errorNullRow.size > 0) {
         setMessageInfo({
-          variant: 'warning',
+          variant: 'danger',
           message: `After detection, there are ${data.length} transfer record and ${errorNullRow.size} error no match query by issuing bank. Please reupload your template`
         });
         return;
       }
       setTotalAmount(amount);
       setMessageInfo({
-        variant: 'success',
-        message: `After detection, there are ${data.length} transfer record, the total transfer amount is Rp${amount}`
+        variant: 'warning',
+        message: `After detection, there are ${data.length} transfer record, the total transfer amount is Rp${formatAmount(amount)}`
       });
     };
 
@@ -90,7 +91,7 @@ const TransferForm = (props) => {
   const onSubmit = async (formValue) => {
     const transactions = jsonData.map((item) => ({
       destinationBankName: item.to_bank_name,
-      destinationAccount: item.to_account_no.toString(),
+      destinationAccount: item.to_account_no?.toString(),
       destinationAccountName: item.to_account_name,
       amount: item.transfer_amount
     }));
@@ -98,7 +99,7 @@ const TransferForm = (props) => {
     const payload = {
       instructionType: formValue.instructionType,
       transferDate: formValue.transferDate,
-      transferTime: formValue.transferTime.toString(),
+      transferTime: formValue?.transferTime?.toString(),
       totalAmount,
       transactions
     };
@@ -131,7 +132,7 @@ const TransferForm = (props) => {
   );
 
   const renderAlert = (variant, errorMessage) => (
-    <Alert key={variant} variant={variant}>
+    <Alert key={variant} variant={variant} className="border border-warning">
       {errorMessage}
     </Alert>
   );
@@ -209,6 +210,7 @@ const TransferForm = (props) => {
         <div className="upload-text">Choose Your Template</div>
         <div>Only xls, xlsx, or csv format is support</div>
       </label>
+      {errors.file && <Form.Text className="text-danger error-input">{errors.file.message}</Form.Text>}
     </Form.Group>
   );
 

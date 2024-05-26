@@ -24,6 +24,7 @@ const Layout = (props) => {
       toggleSidebar={toggleSidebar}
     />
   );
+
   return (
     <Container fluid className="d-flex flex-column min-vh-100">
       <Row className="flex-grow-1">
@@ -36,13 +37,13 @@ const Layout = (props) => {
           </Offcanvas.Body>
         </Offcanvas>
 
-        <Col lg={3} className="d-none d-lg-flex flex-column bg-dark no-outline pt-5">
+        <Col lg={3} className="d-none d-lg-flex flex-column bg-dark no-outline pt-5 left-column">
           {renderSidebar()}
         </Col>
 
         <Col
           lg={9}
-          className="d-flex flex-column px-3"
+          className="d-flex flex-column px-3 right-column"
           style={{ backgroundColor: '#F5F5F5' }}
         >
           {renderNavbarHeader()}

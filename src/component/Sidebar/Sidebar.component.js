@@ -16,7 +16,7 @@ const Sidebar = () => {
 
   const renderMenu = (menu) => (
     menu.role.includes(role) && (
-    <Nav.Link as={Link} to={menu.path} className={location.pathname === menu.path ? 'active bg-warning text-white' : 'text-white'}>
+    <Nav.Link as={Link} to={menu.path} className={location.pathname === menu.path ? 'active bg-orange text-white' : 'text-white'}>
       <div className="custom">
         {menu.icon}
         <div>

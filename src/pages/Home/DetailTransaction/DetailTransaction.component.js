@@ -1,21 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Table, Pagination, Row, Col
-} from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
+
 import { getTransaction } from '../../../api';
 import { TableLayout } from '../../../component/TableLayout';
 import config from './DetailTransaction.config';
+import { formatDate, formatDatetime } from '../../../utils/dateUtils';
 
 const { tableHeadConfig } = config;
 
 const DetailTransaction = (props) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(2);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
   const [data, setData] = useState({});
+  const [totalItems, setTotalItems] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
-  const {
-    referenceNumber
-  } = props;
+  const { referenceNumber } = props;
 
   const mappedTransaction = [{
     title: 'From Account No.: ',
@@ -23,11 +22,11 @@ const DetailTransaction = (props) => {
     position: 'left'
   }, {
     title: 'Submit Date and Time: ',
-    value: data?.createdAt,
+    value: formatDatetime(data?.createdAt),
     position: 'left'
   }, {
     title: 'Transfer Date: ',
-    value: data?.createdAt,
+    value: data?.transferDate ? formatDate(data?.transferDate) : '-',
     position: 'left'
   }, {
     title: 'Instruction Type: ',
@@ -52,6 +51,7 @@ const DetailTransaction = (props) => {
       const detailTransaction = await getTransaction(referenceNumber, currentPage, itemsPerPage);
       setData(detailTransaction.data);
       setTotalPages(detailTransaction.totalPages);
+      setTotalItems(detailTransaction.count);
     };
 
     fetchData();
@@ -72,28 +72,36 @@ const DetailTransaction = (props) => {
     <th style={{ backgroundColor: '#FAFAFA', fontWeight: '400', ...item.style }}>{item.name}</th>
   );
 
-  const renderTableBody = (item, index) => (
-    <tr key={item.id}>
-      <td className="text-secondary">{index + 1}</td>
-      <td className="text-secondary">{item.destinationAccount}</td>
-      <td className="text-secondary">{item.destinationAccountName}</td>
-      <td className="text-secondary">{item.destinationBankName}</td>
-      <td className="text-secondary">{item.amount}</td>
-      <td className="text-secondary">-</td>
-      <td
-        className="text-secondary align-items-center justify-content-center"
-        style={{
-          position: 'sticky', right: 0, background: 'white'
-        }}
-      >
-        <div className="d-flex column-gap-3 text-warning">
-          Awaiting approval
-          Rejected
-          Approved
-        </div>
-      </td>
-    </tr>
-  );
+  const renderTableBody = (item, index) => {
+    const statusFormat = {
+      REJECTED: '• Rejected',
+      WAITING: '• Awaiting approval',
+      APPROVED: '• Approved'
+    };
+
+    return (
+      <tr key={item.id}>
+        <td className="text-secondary">{index + 1}</td>
+        <td className="text-secondary">{item.destinationAccount}</td>
+        <td className="text-secondary">{item.destinationAccountName}</td>
+        <td className="text-secondary">{item.destinationBankName}</td>
+        <td className="text-secondary">{item.amount}</td>
+        <td className="text-secondary">-</td>
+        <td
+          className="text-secondary align-items-center justify-content-center"
+          style={{
+            position: 'sticky', right: 0, background: 'white', minWidth: '160px'
+          }}
+        >
+          <div className="d-flex column-gap-3">
+            <div>
+              {statusFormat[data.status]}
+            </div>
+          </div>
+        </td>
+      </tr>
+    );
+  };
 
   const renderTable = () => (
     <TableLayout
@@ -102,6 +110,8 @@ const DetailTransaction = (props) => {
       totalPages={totalPages}
       currentPage={currentPage}
       handlePageChange={handlePageChange}
+      totalItems={totalItems}
+      setItemsPerPage={setItemsPerPage}
     />
   );
 
@@ -109,10 +119,10 @@ const DetailTransaction = (props) => {
     <div className="bg-white p-3 my-3 mt-auto rounded">
       <div className="bg-light p-3 my-4 mt-auto rounded text-secondary">
         <Row>
-          <Col>
+          <Col sm={12} md={6}>
             {mappedTransaction.filter((item) => item.position === 'left').map(renderInlineView)}
           </Col>
-          <Col>
+          <Col sm={12} md={6}>
             {mappedTransaction.filter((item) => item.position === 'right').map(renderInlineView)}
           </Col>
         </Row>
