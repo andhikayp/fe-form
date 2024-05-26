@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+/* eslint-disable react/button-has-type */
+import React, { useEffect, useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -7,6 +8,8 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { FaDownload } from 'react-icons/fa6';
 import { FaFileUpload } from 'react-icons/fa';
+import * as XLSX from 'xlsx';
+import Alert from 'react-bootstrap/Alert';
 
 import TemplateFile from '../../resource/csv/template-transactions.csv';
 import { Layout } from '../../component/Layout';
@@ -20,7 +23,59 @@ const { formConfig } = config;
 const TransferForm = () => {
   const [loading, setLoading] = useState(false);
   const [isShowForm, setIsShowForm] = useState(false);
+  const [messageInfo, setMessageInfo] = useState({});
   const loginTime = JSON.parse(sessionStorage.getItem('loginTime'));
+  const [jsonData, setJsonData] = useState([]);
+
+  useEffect(() => {
+    const validateData = (data) => {
+      if (data.length === 0) {
+        return;
+      }
+      const errorNullRow = new Set();
+      let amount = 0;
+      data.forEach((row, index) => {
+        const requiredKeys = ['to_bank_name', 'to_account_no', 'to_account_name', 'transfer_amount'];
+        const rowKeys = Object.keys(row);
+        const missingKeys = requiredKeys.filter((key) => !rowKeys.includes(key));
+        const extraKeys = rowKeys.filter((key) => !requiredKeys.includes(key));
+
+        if (missingKeys.length > 0) {
+          setMessageInfo({
+            variant: 'warning',
+            message: `Row ${index + 1} is missing keys: ${missingKeys.join(', ')}. Please reupload your template`
+          });
+        }
+        if (extraKeys.length > 0) {
+          setMessageInfo({
+            variant: 'warning',
+            message: `Row ${index + 1} has extra keys: ${extraKeys.join(', ')}. Please reupload your template`
+          });
+        }
+
+        requiredKeys.forEach((key) => {
+          if (row[key] == null || row[key] === '') {
+            errorNullRow.add(row);
+          }
+        });
+
+        amount += row.transfer_amount;
+      });
+      if (errorNullRow.size > 0) {
+        setMessageInfo({
+          variant: 'warning',
+          message: `After detection, there are ${data.length} transfer record and ${errorNullRow.size} error no match query by issuing bank. Please reupload your template`
+        });
+        return;
+      }
+      setMessageInfo({
+        variant: 'success',
+        message: `After detection, there are ${data.length} transfer record, the total transfer amount is Rp${amount}`
+      });
+    };
+
+    validateData(jsonData);
+  }, [jsonData]);
 
   const {
     register, handleSubmit, setValue,
@@ -33,12 +88,34 @@ const TransferForm = () => {
     console.log(formValue, 'formValue');
   };
 
+  const handleConvert = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const data = e.target.result;
+        const workbook = XLSX.read(data, { type: 'binary' });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const json = XLSX.utils.sheet_to_json(worksheet);
+        setJsonData(json);
+      };
+      reader.readAsBinaryString(file);
+    }
+  };
+
   const renderLoginTime = () => (
     <div className="bg-white p-3 my-3 mt-auto rounded">
       <h4 className="no-outline">
         Create Transaction
       </h4>
     </div>
+  );
+
+  const renderAlert = (variant, errorMessage) => (
+    <Alert key={variant} variant={variant}>
+      {errorMessage}
+    </Alert>
   );
 
   const renderFormGroup = (params) => {
@@ -107,6 +184,7 @@ const TransferForm = () => {
             acceptedFormats: (files) => ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel', 'text/csv'].includes(files[0]?.type) || 'Only CSV or Excel files are allowed'
           }
         })}
+        onChange={handleConvert}
       />
       <label htmlFor="file" className="file-label">
         <FaFileUpload size={50} color="#FFD400" />
@@ -126,6 +204,7 @@ const TransferForm = () => {
             <Form onSubmit={handleSubmit(onSubmit)}>
               {renderUploadTemplate()}
               {renderDownloadTemplate()}
+              {messageInfo && renderAlert(messageInfo?.variant, messageInfo?.message)}
               {formConfig(isShowForm, setIsShowForm).map(renderFormGroup)}
               <div className="my-3">
                 <Button variant="warning" type="submit">
