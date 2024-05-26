@@ -124,6 +124,26 @@ export const getTransactionOverview = async () => {
   }
 };
 
+export const getTransactions = async (page, limit) => {
+  try {
+    const accessToken = sessionStorage.getItem('access_token');
+    const headers = {
+      'X-API-TOKEN': accessToken,
+    };
+    const response = await axios.get(`${URL.service}/api/transactions`, {
+      params: {
+        page,
+        limit,
+      },
+      headers
+    });
+
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const transfer = async (body, setError, setLoading, history) => {
   try {
     setLoading(true);
@@ -142,6 +162,19 @@ export const transfer = async (body, setError, setLoading, history) => {
     });
   } catch (error) {
     setError('Failed transfer');
+  } finally {
+    setLoading(false);
+  }
+};
+
+export const auditTransaction = async (setLoading, referenceNumber, status) => {
+  try {
+    setLoading(true);
+    const accessToken = sessionStorage.getItem('access_token');
+    const headers = {
+      'X-API-TOKEN': accessToken,
+    };
+    await axios.post(`${URL.service}/api/transactions-audit/${referenceNumber}`, { status }, { headers });
   } finally {
     setLoading(false);
   }

@@ -13,3 +13,14 @@
     transform: scale(1);
   }
 }
+
+.active>.page-link {
+  background-color: #FFD400 !important;
+  border-color: #FFD400 !important;
+  color: white !important;
+}
+
+.page-link {
+  color: #FFD400 !important;
+  border-color: #FFD400 !important;
+}
