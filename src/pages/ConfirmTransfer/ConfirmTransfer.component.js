@@ -68,6 +68,7 @@ const ConfirmTransfer = (props) => {
       {item.withBorder && <hr className="my-3" />}
     </>
   );
+
   const renderLayout = () => (
     <div className="bg-white p-3 my-3 mt-auto rounded">
       {errorMessage && renderAlert()}

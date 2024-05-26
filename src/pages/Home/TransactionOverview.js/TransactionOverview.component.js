@@ -32,8 +32,8 @@ const TransactionOverview = (props) => {
     >
       <Card.Title className="mb-4">Status Overview</Card.Title>
       <Row>
-        <StatusBox status="Awaiting" count={transactionOverview?.APPROVED} variant="warning" />
-        <StatusBox status="Successfully" count={transactionOverview?.WAITING} variant="success" />
+        <StatusBox status="Awaiting" count={transactionOverview?.WAITING} variant="warning" />
+        <StatusBox status="Successfully" count={transactionOverview?.APPROVED} variant="success" />
         <StatusBox status="Rejected" count={transactionOverview?.REJECTED} variant="danger" />
       </Row>
     </Card>

@@ -144,6 +144,26 @@ export const getTransactions = async (page, limit) => {
   }
 };
 
+export const getTransaction = async (referenceNumber, page, limit) => {
+  try {
+    const accessToken = sessionStorage.getItem('access_token');
+    const headers = {
+      'X-API-TOKEN': accessToken,
+    };
+    const response = await axios.get(`${URL.service}/api/transactions/${referenceNumber}`, {
+      params: {
+        page,
+        limit,
+      },
+      headers
+    });
+
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const transfer = async (body, setError, setLoading, history) => {
   try {
     setLoading(true);

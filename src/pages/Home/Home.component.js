@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Pagination } from 'react-bootstrap';
 import { IoEye } from 'react-icons/io5';
 import { MdBlockFlipped } from 'react-icons/md';
 import { FaRegCheckCircle } from 'react-icons/fa';
@@ -8,9 +7,12 @@ import Alert from 'react-bootstrap/Alert';
 import { Layout } from '../../component/Layout';
 import { LoadingPage } from '../../component/LoadingPage';
 import { Modal } from '../../component/Modal';
+import { TableLayout } from '../../component/TableLayout';
+
 import { auditTransaction, getTransactionOverview, getTransactions } from '../../api';
 import './Home.css';
 import TransactionOverview from './TransactionOverview.js/TransactionOverview.component';
+import DetailTransaction from './DetailTransaction/DetailTransaction.component';
 import constants from '../../utils/constants';
 import config from './Home.config';
 
@@ -23,6 +25,7 @@ const Home = () => {
   const [overview, setOverview] = useState();
   const [data, setData] = useState([]);
   const [isShowModal, setIsShowModal] = useState(false);
+  const [isShowDetail, setIsShowDetail] = useState(false);
   const [transactionItem, setTransactionItem] = useState({});
   const [action, setAction] = useState();
   const [totalPages, setTotalPages] = useState(1);
@@ -81,6 +84,19 @@ const Home = () => {
     setIsShowModal(false);
   };
 
+  const renderConfirmationContent = () => (
+    <div>
+      Are you sure you want to
+      {' '}
+      {action === 'APPROVED' ? 'approve' : 'reject'}
+      {' '}
+      transaction with reference number:
+      {' '}
+      {transactionItem.referenceNumber}
+      ?`
+    </div>
+  );
+
   const renderConfirmationModal = () => (
     <Modal
       handleClose={handleCloseModal}
@@ -88,9 +104,22 @@ const Home = () => {
       show={isShowModal}
       confirmText="Confirm"
       closeText="Cancel"
-      content={`Are you sure you want to ${action === 'APPROVED' ? 'approve' : 'reject'} transaction with reference number: ${transactionItem.referenceNumber}?`}
+      content={renderConfirmationContent}
       title="Confirmation"
       variant={action === 'APPROVED' ? 'success' : 'danger'}
+    />
+  );
+
+  const renderDetailContent = () => (<DetailTransaction referenceNumber={transactionItem.referenceNumber} />);
+
+  const renderDetailModal = () => (
+    <Modal
+      handleClose={() => setIsShowDetail(false)}
+      show={isShowDetail}
+      content={renderDetailContent}
+      title="Detail Transaction"
+      isShowFooter={false}
+      fullscreen
     />
   );
 
@@ -120,7 +149,10 @@ const Home = () => {
     name: 'Detail',
     isShow: true,
     icon: <IoEye />,
-    onClick: () => {}
+    onClick: () => {
+      setTransactionItem(item);
+      setIsShowDetail(true);
+    }
   }];
 
   const renderButtonAction = (item) => (
@@ -131,9 +163,7 @@ const Home = () => {
         onClick={item.onClick}
       >
         {item.icon}
-        <div>
-          {item.name}
-        </div>
+        <div>{item.name}</div>
       </div>
     )
   );
@@ -144,52 +174,35 @@ const Home = () => {
     </Alert>
   );
 
-  const renderTable = () => (
-    <div className="my-5">
-      <Table hover>
-        <thead className="bg-light">
-          <tr className="text-left align-top bg-light">
-            {tableHeadConfig.map(renderTableHeaderItem)}
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((item, index) => (
-            <tr key={item.referenceNumber}>
-              <td className="text-secondary">{item.referenceNumber}</td>
-              <td className="text-secondary">{item.totalAmount}</td>
-              <td className="text-secondary">{item.totalTransfer}</td>
-              <td className="text-secondary">{item.sourceAccount}</td>
-              <td className="text-secondary">{item.makerUser.username}</td>
-              <td className="text-secondary">{item.transferDate}</td>
-              <td
-                className="text-secondary align-items-center justify-content-center"
-                style={{
-                  position: 'sticky', right: 0, background: 'white'
-                }}
-              >
-                <div className="d-flex column-gap-3 text-warning">
-                  {buttonConfig(item).map(renderButtonAction)}
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
-      <Pagination
-        className="text-warning"
-        linkStyle={{ backgroundColor: 'yellow' }}
+  const renderTableBody = (item) => (
+    <tr key={item.referenceNumber}>
+      <td className="text-secondary">{item.referenceNumber}</td>
+      <td className="text-secondary">{item.totalAmount}</td>
+      <td className="text-secondary">{item.totalTransfer}</td>
+      <td className="text-secondary">{item.sourceAccount}</td>
+      <td className="text-secondary">{item.makerUser.username}</td>
+      <td className="text-secondary">{item.transferDate}</td>
+      <td
+        className="text-secondary align-items-center justify-content-center"
+        style={{
+          position: 'sticky', right: 0, background: 'white'
+        }}
       >
-        {Array.from({ length: totalPages }, (_, i) => (
-          <Pagination.Item
-            key={i + 1}
-            active={i + 1 === currentPage}
-            onClick={() => handlePageChange(i + 1)}
-          >
-            {i + 1}
-          </Pagination.Item>
-        ))}
-      </Pagination>
-    </div>
+        <div className="d-flex column-gap-3 text-warning">
+          {buttonConfig(item).map(renderButtonAction)}
+        </div>
+      </td>
+    </tr>
+  );
+
+  const renderTable = () => (
+    <TableLayout
+      renderTableHead={() => tableHeadConfig.map(renderTableHeaderItem)}
+      renderTableContent={() => data.map(renderTableBody)}
+      totalPages={totalPages}
+      currentPage={currentPage}
+      handlePageChange={handlePageChange}
+    />
   );
 
   const renderContent = () => (
@@ -202,13 +215,12 @@ const Home = () => {
       </div>
       {loading && <LoadingPage />}
       {renderConfirmationModal()}
+      {renderDetailModal()}
     </>
   );
 
   return (
-    <Layout
-      content={renderContent}
-    />
+    <Layout content={renderContent} />
   );
 };
 

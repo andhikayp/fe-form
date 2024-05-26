@@ -24,3 +24,8 @@
   color: #FFD400 !important;
   border-color: #FFD400 !important;
 }
+
+.custom-modal> .modal-content {
+  width: 1200px;
+  max-width: none; /* Ensure the width is always 90% */
+}
