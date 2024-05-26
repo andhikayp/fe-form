@@ -123,3 +123,26 @@ export const getTransactionOverview = async () => {
     console.log(error);
   }
 };
+
+export const transfer = async (body, setError, setLoading, history) => {
+  try {
+    setLoading(true);
+    const accessToken = sessionStorage.getItem('access_token');
+    const headers = {
+      'X-API-TOKEN': accessToken,
+    };
+    const response = await axios.post(`${URL.service}/api/transactions`, body, { headers });
+    const { data } = response.data;
+
+    history.push(Paths.InflightPayment, {
+      payload: {
+        ...body,
+        ...data
+      }
+    });
+  } catch (error) {
+    setError('Failed transfer');
+  } finally {
+    setLoading(false);
+  }
+};

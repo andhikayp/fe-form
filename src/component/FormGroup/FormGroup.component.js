@@ -39,7 +39,7 @@ const FormGroup = (props) => {
 
   const handleTimeChange = (value) => {
     setTime(value);
-    setValue(name, time);
+    setValue(name, value);
   };
 
   const handleType = () => (isShowPassword ? 'text' : 'password');
@@ -63,8 +63,8 @@ const FormGroup = (props) => {
       name={name}
     >
       <option value="" disabled selected>{placeholder}</option>
-      <option value="Maker">Maker</option>
-      <option value="Approver">Approver</option>
+      <option value="MAKER">Maker</option>
+      <option value="APPROVER">Approver</option>
     </Form.Select>
   );
 

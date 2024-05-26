@@ -1,4 +1,3 @@
-/* eslint-disable react/button-has-type */
 import React, { useEffect, useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -17,12 +16,15 @@ import { LoadingPage } from '../../component/LoadingPage';
 import './TransferForm.css';
 import config from './TransferForm.config';
 import { FormGroup } from '../../component/FormGroup';
+import Paths from '../../root/Paths';
 
 const { formConfig } = config;
 
-const TransferForm = () => {
+const TransferForm = (props) => {
+  const { history } = props;
   const [loading, setLoading] = useState(false);
   const [isShowForm, setIsShowForm] = useState(false);
+  const [totalAmount, setTotalAmount] = useState(0);
   const [messageInfo, setMessageInfo] = useState({});
   const loginTime = JSON.parse(sessionStorage.getItem('loginTime'));
   const [jsonData, setJsonData] = useState([]);
@@ -68,6 +70,7 @@ const TransferForm = () => {
         });
         return;
       }
+      setTotalAmount(amount);
       setMessageInfo({
         variant: 'success',
         message: `After detection, there are ${data.length} transfer record, the total transfer amount is Rp${amount}`
@@ -85,7 +88,22 @@ const TransferForm = () => {
   });
 
   const onSubmit = async (formValue) => {
-    console.log(formValue, 'formValue');
+    const transactions = jsonData.map((item) => ({
+      destinationBankName: item.to_bank_name,
+      destinationAccount: item.to_account_no.toString(),
+      destinationAccountName: item.to_account_name,
+      amount: item.transfer_amount
+    }));
+
+    const payload = {
+      instructionType: formValue.instructionType,
+      transferDate: formValue.transferDate,
+      transferTime: formValue.transferTime.toString(),
+      totalAmount,
+      transactions
+    };
+
+    history.push(Paths.ConfirmTransfer, { payload });
   };
 
   const handleConvert = (event) => {
@@ -104,7 +122,7 @@ const TransferForm = () => {
     }
   };
 
-  const renderLoginTime = () => (
+  const renderTitle = () => (
     <div className="bg-white p-3 my-3 mt-auto rounded">
       <h4 className="no-outline">
         Create Transaction
@@ -204,7 +222,7 @@ const TransferForm = () => {
             <Form onSubmit={handleSubmit(onSubmit)}>
               {renderUploadTemplate()}
               {renderDownloadTemplate()}
-              {messageInfo && renderAlert(messageInfo?.variant, messageInfo?.message)}
+              {messageInfo?.variant && renderAlert(messageInfo?.variant, messageInfo?.message)}
               {formConfig(isShowForm, setIsShowForm).map(renderFormGroup)}
               <div className="my-3">
                 <Button variant="warning" type="submit">
@@ -233,7 +251,7 @@ const TransferForm = () => {
 
   const renderContent = () => (
     <>
-      {renderLoginTime()}
+      {renderTitle()}
       {renderFormLayout()}
       {loading && <LoadingPage />}
     </>

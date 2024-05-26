@@ -21,21 +21,6 @@ const formConfig = (isShowForm, setIsShowForm) => [{
   placeholder: 'Please select',
   isPassword: false,
   isShow: isShowForm
-}, {
-  controlId: 'totalTransfer',
-  label: '* Total Transfer Record',
-  name: 'totalTransfer',
-  type: 'text',
-  placeholder: 'Please input',
-  isPassword: false
-}, {
-  controlId: 'totalAmount',
-  label: '* Transfer Amount',
-  name: 'totalAmount',
-  type: 'text',
-  placeholder: 'Please input amount',
-  isPassword: false,
-  prefix: 'Rp'
 }];
 
 export default { formConfig };

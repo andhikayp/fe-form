@@ -11,8 +11,11 @@ const { menus } = config;
 
 const Sidebar = () => {
   const location = useLocation();
+  const user = JSON.parse(sessionStorage.getItem('user'));
+  const { role } = user;
 
   const renderMenu = (menu) => (
+    menu.role.includes(role) && (
     <Nav.Link as={Link} to={menu.path} className={location.pathname === menu.path ? 'active bg-warning text-white' : 'text-white'}>
       <div className="custom">
         {menu.icon}
@@ -21,6 +24,7 @@ const Sidebar = () => {
         </div>
       </div>
     </Nav.Link>
+    )
   );
 
   return (
