@@ -3,26 +3,37 @@ import { Table, Pagination } from 'react-bootstrap';
 import { IoEye } from 'react-icons/io5';
 import { MdBlockFlipped } from 'react-icons/md';
 import { FaRegCheckCircle } from 'react-icons/fa';
+import Alert from 'react-bootstrap/Alert';
 
 import { Layout } from '../../component/Layout';
 import { LoadingPage } from '../../component/LoadingPage';
+import { Modal } from '../../component/Modal';
 import { auditTransaction, getTransactionOverview, getTransactions } from '../../api';
 import './Home.css';
 import TransactionOverview from './TransactionOverview.js/TransactionOverview.component';
 import constants from '../../utils/constants';
+import config from './Home.config';
 
 const { ROLE } = constants;
+const { tableHeadConfig } = config;
 
 const Home = () => {
   const [loading, setLoading] = useState(false);
   const loginTime = JSON.parse(sessionStorage.getItem('loginTime'));
   const [overview, setOverview] = useState();
   const [data, setData] = useState([]);
+  const [isShowModal, setIsShowModal] = useState(false);
+  const [transactionItem, setTransactionItem] = useState({});
+  const [action, setAction] = useState();
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(2);
+  const [message, setMessage] = useState({});
+
   const user = JSON.parse(sessionStorage.getItem('user'));
   const { role } = user;
+
+  const handleCloseModal = () => setIsShowModal(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,22 +64,35 @@ const Home = () => {
     </div>
   );
 
-  const tableHeadConfig = [{
-    name: 'Reference No.',
-  }, {
-    name: 'Total Transfer Amount(Rp)'
-  }, {
-    name: 'Total Transfer Record',
-  }, {
-    name: 'From Account No.'
-  }, {
-    name: 'Maker'
-  }, {
-    name: 'Transfer Date'
-  }, {
-    name: 'Operation',
-    style: { position: 'sticky', right: 0 }
-  }];
+  const handleConfirm = async () => {
+    await auditTransaction(setLoading, transactionItem.referenceNumber, action);
+    setMessage({
+      variant: 'success',
+      message: `Transaction ${action === 'APPROVED' ? 'Approved' : 'Rejected'}`
+    });
+    if (data.length - 1 === 0 && currentPage >= 2) {
+      setCurrentPage(currentPage - 1);
+      setIsShowModal(false);
+      return;
+    }
+    const transaction = await getTransactions(currentPage, itemsPerPage);
+    setData(transaction.data);
+    setTotalPages(transaction.totalPages);
+    setIsShowModal(false);
+  };
+
+  const renderConfirmationModal = () => (
+    <Modal
+      handleClose={handleCloseModal}
+      handleConfirm={handleConfirm}
+      show={isShowModal}
+      confirmText="Confirm"
+      closeText="Cancel"
+      content={`Are you sure you want to ${action === 'APPROVED' ? 'approve' : 'reject'} transaction with reference number: ${transactionItem.referenceNumber}?`}
+      title="Confirmation"
+      variant={action === 'APPROVED' ? 'success' : 'danger'}
+    />
+  );
 
   const renderTableHeaderItem = (item) => (
     <th style={{ backgroundColor: '#FAFAFA', fontWeight: '400', ...item.style }}>{item.name}</th>
@@ -79,14 +103,18 @@ const Home = () => {
     isShow: role === ROLE.APPROVER,
     icon: <FaRegCheckCircle />,
     onClick: async () => {
-      await auditTransaction(setLoading, item.referenceNumber, 'APPROVE');
+      setAction('APPROVED');
+      setTransactionItem(item);
+      setIsShowModal(true);
     }
   }, {
     name: 'Reject',
     isShow: role === ROLE.APPROVER,
     icon: <MdBlockFlipped />,
     onClick: async () => {
-      await auditTransaction(setLoading, item.referenceNumber, 'REJECTED');
+      setAction('REJECTED');
+      setTransactionItem(item);
+      setIsShowModal(true);
     }
   }, {
     name: 'Detail',
@@ -108,6 +136,12 @@ const Home = () => {
         </div>
       </div>
     )
+  );
+
+  const renderAlert = () => (
+    <Alert key={message.variant} variant={message.variant}>
+      {message.message}
+    </Alert>
   );
 
   const renderTable = () => (
@@ -162,10 +196,12 @@ const Home = () => {
     <>
       {renderLoginTime()}
       <div className="bg-white p-3 my-3 mt-auto rounded">
+        {message?.message && renderAlert()}
         <TransactionOverview transactionOverview={overview} />
         {renderTable()}
       </div>
       {loading && <LoadingPage />}
+      {renderConfirmationModal()}
     </>
   );
 
