@@ -64,7 +64,7 @@ const Register = (props) => {
   const renderContent = () => (
     <>
       {loading && <LoadingPage />}
-      <Form onSubmit={handleSubmit(onSubmit)}>
+      <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
         {formConfig(renderSubmitOtp).map(renderFormGroup)}
         <div className="d-grid mt-5">
           <Button variant="warning" type="submit">

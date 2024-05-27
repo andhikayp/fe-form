@@ -5,15 +5,14 @@ import Paths from './Paths';
 
 const AuthenticateRoute = ({ component: Component, roles, ...rest }) => {
   const user = JSON.parse(sessionStorage.getItem('user'));
-  const { role } = user;
 
   return (
     <Route
       {...rest}
-      render={(props) => (roles.includes(role) ? (
+      render={(props) => (roles.includes(user?.role) ? (
         <Component {...props} />
       ) : (
-        <Redirect to={Paths.Home} />
+        <Redirect to={Paths.Login} />
       ))}
     />
   );

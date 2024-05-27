@@ -52,6 +52,7 @@ const FormGroup = (props) => {
       onBlur={onBlur}
       name={name}
       placeholder={placeholder}
+      autoComplete="off"
     />
   );
 

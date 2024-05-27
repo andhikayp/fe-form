@@ -27,11 +27,17 @@ const TransferForm = (props) => {
   const [isShowForm, setIsShowForm] = useState(false);
   const [totalAmount, setTotalAmount] = useState(0);
   const [messageInfo, setMessageInfo] = useState({});
-  const loginTime = JSON.parse(sessionStorage.getItem('loginTime'));
   const [jsonData, setJsonData] = useState([]);
+  const {
+    register, handleSubmit, setValue, setError, clearErrors,
+    formState: { errors }
+  } = useForm({
+    mode: 'onChange'
+  });
 
   useEffect(() => {
     const validateData = (data) => {
+      clearErrors('file');
       if (data.length === 0) {
         return;
       }
@@ -48,12 +54,14 @@ const TransferForm = (props) => {
             variant: 'danger',
             message: `Row ${index + 1} is missing keys: ${missingKeys.join(', ')}. Please reupload your template`
           });
+          setError('file', { message: 'Reupload it again' });
         }
         if (extraKeys.length > 0) {
           setMessageInfo({
             variant: 'danger',
             message: `Row ${index + 1} has extra keys: ${extraKeys.join(', ')}. Please reupload your template`
           });
+          setError('file', { message: 'Reupload it again' });
         }
 
         requiredKeys.forEach((key) => {
@@ -69,6 +77,7 @@ const TransferForm = (props) => {
           variant: 'danger',
           message: `After detection, there are ${data.length} transfer record and ${errorNullRow.size} error no match query by issuing bank. Please reupload your template`
         });
+        setError('file', { message: 'Reupload it again' });
         return;
       }
       setTotalAmount(amount);
@@ -80,13 +89,6 @@ const TransferForm = (props) => {
 
     validateData(jsonData);
   }, [jsonData]);
-
-  const {
-    register, handleSubmit, setValue,
-    formState: { errors }
-  } = useForm({
-    mode: 'onChange'
-  });
 
   const onSubmit = async (formValue) => {
     const transactions = jsonData.map((item) => ({

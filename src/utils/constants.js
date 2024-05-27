@@ -1,5 +1,5 @@
 const URL = {
-  service: 'http://localhost:3001',
+  service: process.env.REACT_APP_BACKEND_URL,
 };
 
 const ROLE = {

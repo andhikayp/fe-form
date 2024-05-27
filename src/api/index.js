@@ -41,8 +41,7 @@ const removeSessionLogin = () => {
 export const sendOtp = async (email, setError, setLoading) => {
   try {
     setLoading(true);
-    const response = await axios.get(`${URL.service}/api/otp/${email}`);
-    saveSessionLogin(response);
+    await axios.get(`${URL.service}/api/otp/${email}`);
   } catch (error) {
     if (!email) {
       setError('email', {
