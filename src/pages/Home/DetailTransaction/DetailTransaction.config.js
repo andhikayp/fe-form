@@ -1,14 +1,15 @@
 import { formatDate, formatDatetime } from '../../../utils/dateUtils';
+import { formatAmount } from '../../../utils/amountUtils';
 
 const informationConfig = (data) => [{
   name: 'Total Transfer Record: ',
   value: data.totalTransfer
 }, {
   name: 'Total Amount: ',
-  value: data.totalAmount
+  value: `Rp${formatAmount(data.totalAmount)}`
 }, {
   name: 'Estimated Service Fee: ',
-  value: 0
+  value: 'Rp0'
 }];
 
 const tableHeadConfig = [{

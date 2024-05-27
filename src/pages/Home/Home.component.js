@@ -16,6 +16,7 @@ import DetailTransaction from './DetailTransaction/DetailTransaction.component';
 import constants from '../../utils/constants';
 import config from './Home.config';
 import { formatDate, formatDatetime } from '../../utils/dateUtils';
+import { formatAmount } from '../../utils/amountUtils';
 
 const { ROLE } = constants;
 const { tableHeadConfig } = config;
@@ -177,7 +178,7 @@ const Home = () => {
   const renderTableBody = (item) => (
     <tr key={item.referenceNumber}>
       <td className="text-secondary">{item.referenceNumber}</td>
-      <td className="tex  t-secondary">{item.totalAmount}</td>
+      <td className="tex  t-secondary">{formatAmount(item.totalAmount)}</td>
       <td className="text-secondary">{item.totalTransfer}</td>
       <td className="text-secondary">{item.sourceAccount}</td>
       <td className="text-secondary">{item.makerUser.username}</td>

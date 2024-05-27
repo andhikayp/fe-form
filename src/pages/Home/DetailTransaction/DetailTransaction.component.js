@@ -4,6 +4,7 @@ import { Row, Col } from 'react-bootstrap';
 import { getTransaction } from '../../../api';
 import { TableLayout } from '../../../component/TableLayout';
 import config from './DetailTransaction.config';
+import { formatAmount } from '../../../utils/amountUtils';
 
 const { tableHeadConfig, mappedTransaction, informationConfig } = config;
 
@@ -50,7 +51,7 @@ const DetailTransaction = (props) => {
         <td className="text-secondary">{item.destinationAccount}</td>
         <td className="text-secondary">{item.destinationAccountName}</td>
         <td className="text-secondary">{item.destinationBankName}</td>
-        <td className="text-secondary">{item.amount}</td>
+        <td className="text-secondary">{formatAmount(item.amount)}</td>
         <td className="text-secondary">-</td>
         <td
           className="text-secondary align-items-center justify-content-center"
