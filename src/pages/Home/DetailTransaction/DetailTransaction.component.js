@@ -4,9 +4,8 @@ import { Row, Col } from 'react-bootstrap';
 import { getTransaction } from '../../../api';
 import { TableLayout } from '../../../component/TableLayout';
 import config from './DetailTransaction.config';
-import { formatDate, formatDatetime } from '../../../utils/dateUtils';
 
-const { tableHeadConfig } = config;
+const { tableHeadConfig, mappedTransaction, informationConfig } = config;
 
 const DetailTransaction = (props) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -15,36 +14,6 @@ const DetailTransaction = (props) => {
   const [totalItems, setTotalItems] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const { referenceNumber } = props;
-
-  const mappedTransaction = [{
-    title: 'From Account No.: ',
-    value: data?.sourceAccount,
-    position: 'left'
-  }, {
-    title: 'Submit Date and Time: ',
-    value: formatDatetime(data?.createdAt),
-    position: 'left'
-  }, {
-    title: 'Transfer Date: ',
-    value: data?.transferDate ? formatDate(data?.transferDate) : '-',
-    position: 'left'
-  }, {
-    title: 'Instruction Type: ',
-    value: data?.instructionType === 'STANDING_INSTRUCTION' ? 'Standing Instruction' : 'Immediate ',
-    position: 'left'
-  }, {
-    title: 'Maker: ',
-    value: data?.makerUser?.username,
-    position: 'right'
-  }, {
-    title: 'Reference No.: ',
-    value: data?.referenceNumber,
-    position: 'right'
-  }, {
-    title: 'Transfer Type: ',
-    value: data?.transferType,
-    position: 'right'
-  }];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -66,10 +35,6 @@ const DetailTransaction = (props) => {
       {item.title}
       <span className="text-dark">{item.value}</span>
     </div>
-  );
-
-  const renderTableHeaderItem = (item) => (
-    <th style={{ backgroundColor: '#FAFAFA', fontWeight: '400', ...item.style }}>{item.name}</th>
   );
 
   const renderTableBody = (item, index) => {
@@ -105,14 +70,22 @@ const DetailTransaction = (props) => {
 
   const renderTable = () => (
     <TableLayout
-      renderTableHead={() => tableHeadConfig.map(renderTableHeaderItem)}
-      renderTableContent={() => data?.transactions?.map(renderTableBody)}
+      tableHeadConfig={tableHeadConfig}
+      renderTableContent={() => data.transactions?.map(renderTableBody)}
       totalPages={totalPages}
       currentPage={currentPage}
       handlePageChange={handlePageChange}
       totalItems={totalItems}
       setItemsPerPage={setItemsPerPage}
+      isEmpty={data.transactions?.length === 0}
     />
+  );
+
+  const renderInformationItem = (item) => (
+    <di>
+      {item.name}
+      <span className="text-dark"><b>{item.value}</b></span>
+    </di>
   );
 
   return (
@@ -120,29 +93,15 @@ const DetailTransaction = (props) => {
       <div className="bg-light p-3 my-4 mt-auto rounded text-secondary">
         <Row>
           <Col sm={12} md={6}>
-            {mappedTransaction.filter((item) => item.position === 'left').map(renderInlineView)}
+            {mappedTransaction(data).filter((item) => item.position === 'left').map(renderInlineView)}
           </Col>
           <Col sm={12} md={6}>
-            {mappedTransaction.filter((item) => item.position === 'right').map(renderInlineView)}
+            {mappedTransaction(data).filter((item) => item.position === 'right').map(renderInlineView)}
           </Col>
         </Row>
       </div>
       <div className="d-flex column-gap-4">
-        <di>
-          Total Transfer Record:
-          {' '}
-          <span className="text-dark"><b>{data.totalTransfer}</b></span>
-        </di>
-        <di>
-          Total Amount:
-          {' '}
-          <span className="text-dark"><b>{data.totalAmount}</b></span>
-        </di>
-        <di>
-          Estimated Service Fee:
-          {' '}
-          <span className="text-dark"><b>0</b></span>
-        </di>
+        {informationConfig(data).map(renderInformationItem)}
       </div>
       {renderTable()}
     </div>

@@ -127,10 +127,6 @@ const Home = () => {
     />
   );
 
-  const renderTableHeaderItem = (item) => (
-    <th style={{ backgroundColor: '#FAFAFA', fontWeight: '400', ...item.style }}>{item.name}</th>
-  );
-
   const buttonConfig = (item) => [{
     name: 'Approve',
     isShow: role === ROLE.APPROVER,
@@ -201,13 +197,14 @@ const Home = () => {
 
   const renderTable = () => (
     <TableLayout
-      renderTableHead={() => tableHeadConfig.map(renderTableHeaderItem)}
+      tableHeadConfig={tableHeadConfig}
       renderTableContent={() => data.map(renderTableBody)}
       totalPages={totalPages}
       currentPage={currentPage}
       handlePageChange={handlePageChange}
       totalItems={totalItems}
       setItemsPerPage={setItemsPerPage}
+      isEmpty={data.length === 0}
     />
   );
 

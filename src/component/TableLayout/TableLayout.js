@@ -1,12 +1,17 @@
 import React from 'react';
 import { Table, Pagination } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
+import { CiFolderOff } from 'react-icons/ci';
 
 const TableLayout = (props) => {
   const {
-    renderTableHead, renderTableContent, totalPages, currentPage, handlePageChange, totalItems,
-    setItemsPerPage
+    tableHeadConfig, renderTableContent, totalPages, currentPage, handlePageChange, totalItems,
+    setItemsPerPage, isEmpty
   } = props;
+
+  const renderTableHeaderItem = (item) => (
+    <th style={{ backgroundColor: '#FAFAFA', fontWeight: '400', ...item.style }}>{item.name}</th>
+  );
 
   const onChange = (event) => {
     setItemsPerPage(event.target.value);
@@ -17,11 +22,22 @@ const TableLayout = (props) => {
       onChange={onChange}
       name="dropdown"
     >
-      <option value={5} selected>5/page</option>
+      <option value={5} selected>5 / page</option>
       <option value={10}>10 / page</option>
       <option value={20}>20 / page</option>
       <option value={50}>50 / page</option>
     </Form.Select>
+  );
+
+  const renderEmptyState = () => (
+    <tr className="">
+      <td colSpan={tableHeadConfig.length} className="">
+        <div className="d-flex justify-content-center align-items-center flex-column text-center" style={{ height: '200px' }}>
+          <img alt="emptyState" src="https://icons.iconarchive.com/icons/mazenl77/NX11/128/Folder-Default-icon.png" width="64" height="64" />
+          <div className="text-secondary">No Data</div>
+        </div>
+      </td>
+    </tr>
   );
 
   return (
@@ -29,11 +45,11 @@ const TableLayout = (props) => {
       <Table hover responsive>
         <thead className="bg-light">
           <tr className="text-left align-top bg-light">
-            {renderTableHead()}
+            {tableHeadConfig.map(renderTableHeaderItem)}
           </tr>
         </thead>
         <tbody>
-          {renderTableContent()}
+          {isEmpty ? renderEmptyState() : renderTableContent()}
         </tbody>
       </Table>
       <div className="d-flex justify-content-between">
@@ -52,7 +68,7 @@ const TableLayout = (props) => {
           ))}
         </Pagination>
         <div>
-          <div className="text-align-right">{`Total ${totalItems} items`}</div>
+          <div className="d-flex justify-content-center">{`Total ${totalItems} items`}</div>
           {renderDropdown()}
         </div>
       </div>

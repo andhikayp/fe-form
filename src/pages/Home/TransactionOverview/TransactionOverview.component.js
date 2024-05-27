@@ -16,7 +16,7 @@ const StatusBox = ({ status, count, variant }) => (
           style={{ fontSize: '48px', fontWeight: 'bolder' }}
           className={`mt-4 text-${variant}`}
         >
-          {count}
+          {count || 0}
         </div>
       </Card.Body>
     </Card>
